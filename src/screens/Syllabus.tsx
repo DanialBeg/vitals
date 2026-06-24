@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePostHog } from "@posthog/react";
 import { Card } from "../components/ui";
 import { useStore } from "../state/store";
 import { specialties, syllabusKey, exam } from "../content";
@@ -47,8 +48,16 @@ function rollup(state: AppState, specialtyId: string) {
 }
 
 export function Syllabus() {
+  const posthog = usePostHog();
   const state = useStore();
   const cycle = useStore((st) => st.cycleSyllabus);
+  const onCycle = (key: string, specialtyId: string) => {
+    cycle(key);
+    posthog?.capture("syllabus_condition_updated", {
+      specialty_id: specialtyId,
+      status: useStore.getState().syllabus[key] ?? "none",
+    });
+  };
   const [open, setOpen] = useState<string | null>(null);
 
   const coverage = weightedCoverage(state);
@@ -104,7 +113,7 @@ export function Syllabus() {
                   const key = syllabusKey(sp.id, i);
                   const st = state.syllabus[key] ?? "none";
                   return (
-                    <button key={key} className={c.condRow} onClick={() => cycle(key)}>
+                    <button key={key} className={c.condRow} onClick={() => onCycle(key, sp.id)}>
                       <span className={c.dot} style={{ background: STATUS_COLOR[st], opacity: st === "none" ? 0.35 : 1 }} />
                       <span className={c.condName} style={{ color: st === "none" ? "var(--muted)" : "var(--text)" }}>{cond}</span>
                       <span className={c.condStatus} style={{ color: STATUS_COLOR[st] }}>{STATUS_LABEL[st]}</span>

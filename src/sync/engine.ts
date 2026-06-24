@@ -4,6 +4,7 @@ import { onAuthChange, type AuthUser } from "./auth";
 import { useStore } from "../state/store";
 import { migrate } from "../state/migrations";
 import { mergeStates } from "./merge";
+import { identifyUser, resetAnalytics } from "../lib/analytics";
 import type { AppState } from "../types";
 
 export type SyncStatus =
@@ -131,10 +132,18 @@ export function initSync(): void {
     if (!useSync.getState().ready) set({ ready: true, status: "signed-out" });
   }, 3000);
 
+  let identified = false;
   onAuthChange((user) => {
     clearTimeout(backstop);
     set({ user, status: user ? "syncing" : "signed-out", ready: true });
-    if (user) void reconcile();
+    if (user) {
+      identifyUser(user); // link analytics to the signed-in user (idempotent)
+      identified = true;
+      void reconcile();
+    } else if (identified) {
+      resetAnalytics(); // sign-out: stop attributing events to the prior user
+      identified = false;
+    }
   });
 
   // Local edits → debounced push (and queued while offline).

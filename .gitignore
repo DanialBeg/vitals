@@ -74,3 +74,10 @@ Thumbs.db
 BRIEF.md
 PLAN.md
 SETUP.md
+
+# Agent / tooling artifacts (not part of the app)
+.claude/
+.agents/
+.mcp.json
+skills-lock.json
+.posthog-events.json
