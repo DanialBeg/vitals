@@ -17,7 +17,7 @@
           var u = new URLSearchParams(location.search).get("theme");
           var t = u === "light" || u === "dark" ? u : localStorage.getItem("vitals.theme");
           if (t !== "light" && t !== "dark") {
-            t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            t = "light"; // default theme
           }
           document.documentElement.setAttribute("data-theme", t);
         } catch (e) {

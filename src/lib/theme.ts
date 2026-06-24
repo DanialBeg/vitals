@@ -21,7 +21,8 @@ function urlTheme(): Theme | null {
 }
 
 export function resolvedTheme(): Theme {
-  return urlTheme() ?? storedTheme() ?? systemTheme();
+  // Default to light when the user hasn't chosen and there's no URL override.
+  return urlTheme() ?? storedTheme() ?? "light";
 }
 
 export function applyTheme(theme: Theme): void {
