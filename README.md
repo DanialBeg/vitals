@@ -1,7 +1,7 @@
 # Vitals
 
-An installable, offline-first PWA that holds a single junior doctor accountable while
-she studies for the **RACP Adult Medicine Divisional Written Exam (DWE)**, sitting
+An installable, offline-first PWA that holds a junior doctor accountable while
+they study for the **RACP Adult Medicine Divisional Written Exam (DWE)**, sitting
 **9 February 2027**.
 
 It is **not** a syllabus viewer. Its job is to confront one specific failure mode —
