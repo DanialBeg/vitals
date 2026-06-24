@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sheet, Button } from "./ui";
 import { NumberStepper } from "./NumberStepper";
 import { useStore } from "../state/store";
@@ -31,9 +31,26 @@ export function QuickLog({
   const [specialtyId, setSpecialtyId] = useState<string>("");
   const [minutes, setMinutes] = useState<number | "">("");
 
+  const defaultCount = (t: LogType) =>
+    t === "questions" ? dailyTarget : TYPES.find((x) => x.type === t)!.defaultCount;
+
+  // Each time the sheet opens, reflect the requested type with a sensible
+  // default and clear volatile fields. (The component stays mounted, so this
+  // can't live in useState initialisers.)
+  useEffect(() => {
+    if (!open) return;
+    const t = initialType ?? "questions";
+    setType(t);
+    setCount(defaultCount(t));
+    setCorrect("");
+    setMinutes("");
+    setSpecialtyId("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialType]);
+
   const pickType = (t: LogType) => {
     setType(t);
-    setCount(TYPES.find((x) => x.type === t)!.defaultCount);
+    setCount(defaultCount(t));
     setCorrect("");
   };
 
