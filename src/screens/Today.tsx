@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePostHog } from "@posthog/react";
 import { Card, Button, ProgressBar, EmptyState } from "../components/ui";
 import { VitalReadout } from "../components/VitalReadout";
 import { RatioTrace } from "../components/charts/RatioTrace";
@@ -20,6 +21,7 @@ import type { LogType } from "../types";
 import s from "./screens.module.css";
 
 export function Today({ onGoActivity }: { onGoActivity: () => void }) {
+  const posthog = usePostHog();
   const now = useNow();
   const today = todayISO(now);
   const state = useStore();
@@ -119,7 +121,10 @@ export function Today({ onGoActivity }: { onGoActivity: () => void }) {
             type="checkbox"
             className="visually-hidden"
             checked={ankiCleared}
-            onChange={(e) => setAnkiCleared(today, e.target.checked)}
+            onChange={(e) => {
+              setAnkiCleared(today, e.target.checked);
+              if (e.target.checked) posthog?.capture("anki_cleared");
+            }}
           />
           <span>Cleared today's Anki reviews</span>
         </label>

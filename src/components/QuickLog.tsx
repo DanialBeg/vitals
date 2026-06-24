@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { usePostHog } from "@posthog/react";
 import { Sheet, Button } from "./ui";
 import { NumberStepper } from "./NumberStepper";
 import { useStore } from "../state/store";
 import { specialties } from "../content";
 import { todayISO } from "../lib/date";
+import { questionsToday } from "../derive/hours";
 import type { LogType } from "../types";
 import styles from "./QuickLog.module.css";
 
@@ -23,6 +25,7 @@ export function QuickLog({
   onClose: () => void;
   initialType?: LogType;
 }) {
+  const posthog = usePostHog();
   const addLog = useStore((s) => s.addLog);
   const dailyTarget = useStore((s) => s.profile.dailyQuestionTarget);
   const [type, setType] = useState<LogType>(initialType ?? "questions");
@@ -55,14 +58,30 @@ export function QuickLog({
   };
 
   const submit = () => {
+    const n = Math.max(0, count || 0);
+    const prevDone = questionsToday(useStore.getState(), todayISO()).done;
+
     addLog({
       date: todayISO(),
       type,
-      count: Math.max(0, count || 0),
+      count: n,
       specialtyId: specialtyId || undefined,
       correct: type === "questions" && correct !== "" ? Number(correct) : undefined,
       minutes: minutes !== "" ? Number(minutes) : undefined,
     });
+
+    posthog?.capture("study_session_logged", {
+      type,
+      count: n,
+      has_correct: type === "questions" && correct !== "",
+      has_specialty: !!specialtyId,
+      minutes: minutes !== "" ? Number(minutes) : null,
+    });
+
+    // Fire once, when today's questions first cross the daily target.
+    if (type === "questions" && prevDone < dailyTarget && prevDone + n >= dailyTarget) {
+      posthog?.capture("daily_goal_reached", { target: dailyTarget, total: prevDone + n });
+    }
     // reset volatile fields, keep type
     setCorrect("");
     setMinutes("");

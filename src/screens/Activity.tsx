@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { usePostHog } from "@posthog/react";
 import { Card, Button, EmptyState } from "../components/ui";
 import { TrendChart } from "../components/charts/TrendChart";
 import { ErrorLog } from "../components/ErrorLog";
@@ -13,6 +14,7 @@ import s from "./screens.module.css";
 import a from "./Activity.module.css";
 
 export function Activity() {
+  const posthog = usePostHog();
   const state = useStore();
   const replaceState = useStore((st) => st.replaceState);
   const snapshot = useStore((st) => st.snapshot);
@@ -32,6 +34,7 @@ export function Activity() {
       const next = await parseImport(file);
       if (confirm("Import will replace your current data on this device. Continue?")) {
         replaceState(next);
+        posthog?.capture("data_imported");
         setImportMsg("Imported successfully.");
       }
     } catch (err) {
@@ -110,7 +113,7 @@ export function Activity() {
           A local JSON backup, independent of sync. Belt and braces.
         </p>
         <div className={s.quickGrid}>
-          <Button onClick={() => exportState(snapshot())}>Export data</Button>
+          <Button onClick={() => { exportState(snapshot()); posthog?.capture("data_exported"); }}>Export data</Button>
           <Button onClick={() => fileRef.current?.click()}>Import data</Button>
         </div>
         <input

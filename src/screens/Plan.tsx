@@ -1,3 +1,4 @@
+import { usePostHog } from "@posthog/react";
 import { Card } from "../components/ui";
 import { IconCheck } from "../components/icons";
 import { useStore } from "../state/store";
@@ -8,6 +9,7 @@ import s from "./screens.module.css";
 import p from "./Plan.module.css";
 
 export function Plan() {
+  const posthog = usePostHog();
   const state = useStore();
   const setPhaseCheck = useStore((st) => st.setPhaseCheck);
   const today = todayISO();
@@ -52,7 +54,13 @@ export function Plan() {
                     type="checkbox"
                     className="visually-hidden"
                     checked={checked}
-                    onChange={(e) => setPhaseCheck(key, e.target.checked)}
+                    onChange={(e) => {
+                      setPhaseCheck(key, e.target.checked);
+                      posthog?.capture("plan_checklist_item_toggled", {
+                        phase_id: span.id,
+                        checked: e.target.checked,
+                      });
+                    }}
                   />
                   <span style={{ textDecoration: checked ? "line-through" : "none", color: checked ? "var(--muted)" : "var(--text)" }}>
                     {item}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePostHog } from "@posthog/react";
 import { Card, Button, Chip, Sheet, EmptyState } from "./ui";
 import { useStore } from "../state/store";
 import { specialties, errorTypes, specialtyName } from "../content";
@@ -10,6 +11,7 @@ import s from "../screens/screens.module.css";
 import e from "./ErrorLog.module.css";
 
 export function ErrorLog() {
+  const posthog = usePostHog();
   const state = useStore();
   const addError = useStore((st) => st.addError);
   const resolveError = useStore((st) => st.resolveError);
@@ -40,6 +42,7 @@ export function ErrorLog() {
       yourAnswer: yourAnswer.trim() || undefined,
       correctAnswer: correctAnswer.trim() || undefined,
     });
+    posthog?.capture("error_logged", { error_type: errorType, has_specialty: !!specialtyId });
     setTakeaway("");
     setYourAnswer("");
     setCorrectAnswer("");
@@ -104,8 +107,25 @@ export function ErrorLog() {
               </div>
               {!err.resolved && (
                 <div className={e.actions}>
-                  <Button onClick={() => resolveError(err.id)} style={{ minHeight: 38 }}>Got it</Button>
-                  <Button variant="danger" onClick={() => missedAgain(err.id)} style={{ minHeight: 38 }}>Missed again</Button>
+                  <Button
+                    onClick={() => {
+                      resolveError(err.id);
+                      posthog?.capture("error_resolved", { error_type: err.errorType, was_missed_again: err.missedAgain });
+                    }}
+                    style={{ minHeight: 38 }}
+                  >
+                    Got it
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => {
+                      missedAgain(err.id);
+                      posthog?.capture("error_missed_again", { error_type: err.errorType });
+                    }}
+                    style={{ minHeight: 38 }}
+                  >
+                    Missed again
+                  </Button>
                 </div>
               )}
             </div>

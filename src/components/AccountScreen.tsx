@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePostHog } from "@posthog/react";
 import { Button } from "./ui";
 import { useSync, retrySync } from "../sync/engine";
 import { sendMagicLink, signInWithGoogle, signOut } from "../sync/auth";
@@ -32,6 +33,7 @@ export function AccountScreen({
   /** When false the screen is a required gate — no close affordance. */
   dismissable?: boolean;
 }) {
+  const posthog = usePostHog();
   const { status, user, error, lastSyncedAt } = useSync();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -48,13 +50,22 @@ export function AccountScreen({
     const { error } = await sendMagicLink(email.trim());
     setBusy(false);
     if (error) setLocalErr(error);
-    else setSent(true);
+    else {
+      setSent(true);
+      posthog?.capture("sign_in_email_sent");
+    }
   };
 
   const google = async () => {
     setLocalErr(null);
+    posthog?.capture("sign_in_google_clicked");
     const { error } = await signInWithGoogle(); // full-page redirect on success
     if (error) setLocalErr(error);
+  };
+
+  const doSignOut = () => {
+    posthog?.capture("sign_out");
+    void signOut();
   };
 
   const initial = (user?.email?.[0] ?? "?").toUpperCase();
@@ -97,7 +108,7 @@ export function AccountScreen({
                 <Button block onClick={retrySync} style={{ marginTop: 14 }}>Retry sync</Button>
               </>
             )}
-            <Button block variant="danger" onClick={() => void signOut()} style={{ marginTop: 10 }}>
+            <Button block variant="danger" onClick={doSignOut} style={{ marginTop: 10 }}>
               Sign out
             </Button>
             <p className={s.fine}>Signing out keeps all your data on this device — it just stops syncing.</p>
