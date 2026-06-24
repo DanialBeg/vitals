@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 .typeBtn {
   min-height: var(--tap);
@@ -11,11 +11,14 @@
   color: var(--muted);
   border-radius: var(--r-md);
   font-weight: 600;
-  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
 }
 .typeActive {
   background: var(--glass-strong);
   color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--glass-border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
+    0 4px 14px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .field {
@@ -24,25 +27,42 @@
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
-}
-.field span {
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-.field input,
-.field select {
-  width: 132px;
   min-height: var(--tap);
+}
+.field > span {
+  font-size: 0.92rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Custom select with a real chevron (native arrow removed). */
+.selectWrap {
+  position: relative;
+  width: 174px;
+}
+.selectWrap select {
+  width: 100%;
+  min-height: var(--tap);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background: var(--well);
   border: 1px solid var(--glass-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--r-pill);
   color: var(--text);
-  padding: 0 13px;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
   font-weight: 600;
+  padding: 0 38px 0 16px;
 }
-.field select {
-  text-align: left;
-  font-weight: 500;
+.selectWrap select:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--glass-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
 }

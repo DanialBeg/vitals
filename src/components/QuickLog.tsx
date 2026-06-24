@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Sheet, Button } from "./ui";
+import { NumberStepper } from "./NumberStepper";
 import { useStore } from "../state/store";
 import { specialties } from "../content";
 import { todayISO } from "../lib/date";
@@ -67,55 +68,58 @@ export function QuickLog({
         ))}
       </div>
 
-      <label className={styles.field}>
+      <div className={styles.field}>
         <span>{type === "lecture" ? "Lectures" : type === "cards" ? "Cards made" : type === "review" ? "Cards reviewed" : "Questions done"}</span>
-        <input
-          type="number"
-          inputMode="numeric"
-          min={0}
+        <NumberStepper
           value={count}
-          onChange={(e) => setCount(Number(e.target.value))}
+          onChange={(v) => setCount(v === "" ? 0 : v)}
+          min={0}
+          ariaLabel="Count"
         />
-      </label>
+      </div>
 
       {type === "questions" && (
-        <label className={styles.field}>
+        <div className={styles.field}>
           <span>Correct (optional)</span>
-          <input
-            type="number"
-            inputMode="numeric"
+          <NumberStepper
+            value={correct}
+            onChange={setCorrect}
             min={0}
             max={count}
-            value={correct}
-            placeholder="—"
-            onChange={(e) => setCorrect(e.target.value === "" ? "" : Number(e.target.value))}
+            allowEmpty
+            ariaLabel="Correct answers"
           />
-        </label>
+        </div>
       )}
 
       <label className={styles.field}>
         <span>Topic (optional)</span>
-        <select value={specialtyId} onChange={(e) => setSpecialtyId(e.target.value)}>
-          <option value="">No tag</option>
-          {specialties.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
+        <div className={styles.selectWrap}>
+          <select value={specialtyId} onChange={(e) => setSpecialtyId(e.target.value)}>
+            <option value="">No tag</option>
+            {specialties.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+          <svg className={styles.chevron} viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
       </label>
 
-      <label className={styles.field}>
+      <div className={styles.field}>
         <span>Minutes (optional)</span>
-        <input
-          type="number"
-          inputMode="numeric"
-          min={0}
+        <NumberStepper
           value={minutes}
-          placeholder="—"
-          onChange={(e) => setMinutes(e.target.value === "" ? "" : Number(e.target.value))}
+          onChange={setMinutes}
+          min={0}
+          step={5}
+          allowEmpty
+          ariaLabel="Minutes"
         />
-      </label>
+      </div>
 
       <Button variant="primary" block onClick={submit} style={{ marginTop: 8 }}>
         Log it

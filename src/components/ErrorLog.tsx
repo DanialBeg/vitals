@@ -116,10 +116,15 @@ export function ErrorLog() {
       <Sheet open={adding} onClose={() => setAdding(false)} title="Log a wrong question">
         <label className={e.field}>
           <span>Topic</span>
-          <select value={specialtyId} onChange={(ev) => setSpecialtyId(ev.target.value)}>
-            <option value="">No tag</option>
-            {specialties.map((sp) => <option key={sp.id} value={sp.id}>{sp.name}</option>)}
-          </select>
+          <div className={e.selectWrap}>
+            <select value={specialtyId} onChange={(ev) => setSpecialtyId(ev.target.value)}>
+              <option value="">No tag</option>
+              {specialties.map((sp) => <option key={sp.id} value={sp.id}>{sp.name}</option>)}
+            </select>
+            <svg className={e.chevron} viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
         </label>
         <div className={e.typeGrid}>
           {errorTypes.map((t) => (

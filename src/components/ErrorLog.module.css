@@ -73,7 +73,6 @@
   font-size: 0.85rem;
   color: var(--muted);
 }
-.field select,
 .fieldCol input,
 .fieldCol textarea {
   background: var(--well);
@@ -85,8 +84,37 @@
   width: 100%;
   font-family: var(--font-text);
 }
-.field select {
-  width: 170px;
+
+/* Custom select with a real chevron (native arrow removed). */
+.selectWrap {
+  position: relative;
+  width: 200px;
+}
+.selectWrap select {
+  width: 100%;
+  min-height: var(--tap);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: var(--well);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  color: var(--text);
+  font-weight: 600;
+  padding: 0 38px 0 16px;
+}
+.selectWrap select:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--glass-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
 }
 .fieldCol textarea {
   resize: vertical;

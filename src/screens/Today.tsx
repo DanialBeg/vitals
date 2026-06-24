@@ -25,7 +25,9 @@ export function Today({ onGoActivity }: { onGoActivity: () => void }) {
   const state = useStore();
   const setAnkiCleared = useStore((st) => st.setAnkiCleared);
 
-  const [logOpen, setLogOpen] = useState(false);
+  const [logOpen, setLogOpen] = useState(
+    () => import.meta.env.DEV && new URLSearchParams(location.search).get("sheet") === "log",
+  );
   const [logType, setLogType] = useState<LogType>("questions");
 
   const ret = retrievalReading(state, 7, today);
