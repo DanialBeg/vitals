@@ -1,0 +1,44 @@
+.panel {
+  background:
+    radial-gradient(110% 80% at 100% 0%, color-mix(in srgb, var(--review) 10%, transparent), transparent 55%),
+    var(--glass);
+  border-color: var(--glass-border);
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.metricVal {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.delta {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-weight: 600;
+}
+.foot {
+  margin-top: 12px;
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}

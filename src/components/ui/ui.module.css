@@ -1,0 +1,173 @@
+/* ---- Module = a floating glass panel ---- */
+.card {
+  position: relative;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+  backdrop-filter: blur(var(--blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  padding: 16px 17px 17px;
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+  animation: moduleIn 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.cardTitle {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  margin-bottom: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  min-height: var(--tap);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  color: var(--text);
+  border-radius: var(--r-pill);
+  padding: 0 18px;
+  font-weight: 600;
+  font-size: 0.94rem;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: inset 0 1px 0 var(--glass-hi);
+  transition: transform 0.08s ease, filter 0.12s ease, background 0.12s ease;
+}
+.btn:active {
+  transform: scale(0.975);
+}
+.btnPrimary {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, white), var(--accent));
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  color: var(--on-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 6px 18px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.btnPrimary:active {
+  filter: brightness(0.97);
+}
+.btnDanger {
+  border-color: color-mix(in srgb, var(--alert) 50%, var(--glass-border));
+  color: var(--alert);
+  background: var(--alert-wash);
+}
+.btnGhost {
+  background: var(--glass-quiet);
+  border-color: var(--hairline);
+}
+.btnBlock {
+  width: 100%;
+}
+
+/* ---- Progress ---- */
+.progressTrack {
+  height: 9px;
+  border-radius: var(--r-pill);
+  background: var(--well);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* ---- Chips ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: var(--r-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-quiet);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--muted);
+  min-height: 34px;
+  transition: color 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+}
+.chipActive {
+  color: var(--on-accent);
+  border-color: transparent;
+  background: var(--accent);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+/* ---- Empty state ---- */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ---- Bottom sheet ---- */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 18, 0.45);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 50;
+  animation: fade 0.18s ease;
+}
+.sheet {
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(180%);
+  backdrop-filter: blur(var(--blur-strong)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-bottom: none;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  width: 100%;
+  max-width: var(--maxw);
+  padding: 18px 18px calc(20px + var(--safe-bottom));
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--glass-hi);
+  animation: rise 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sheetHandle {
+  width: 38px;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--muted);
+  opacity: 0.4;
+  margin: 0 auto 16px;
+}
+.sheetTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes rise {
+  from {
+    transform: translateY(24px);
+  }
+}

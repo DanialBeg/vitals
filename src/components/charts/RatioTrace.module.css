@@ -1,0 +1,24 @@
+.trace {
+  display: block;
+}
+
+.sweep {
+  animation: sweep 3.2s linear infinite;
+  transform-box: fill-box;
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(340px);
+  }
+}
+
+/* reduced-motion handled globally, but hide the sweep entirely to be safe */
+@media (prefers-reduced-motion: reduce) {
+  .sweep {
+    display: none;
+  }
+}

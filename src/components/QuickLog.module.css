@@ -1,0 +1,48 @@
+.types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.typeBtn {
+  min-height: var(--tap);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-quiet);
+  color: var(--muted);
+  border-radius: var(--r-md);
+  font-weight: 600;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+}
+.typeActive {
+  background: var(--glass-strong);
+  color: var(--text);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.field span {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.field input,
+.field select {
+  width: 132px;
+  min-height: var(--tap);
+  background: var(--well);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  padding: 0 13px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.field select {
+  text-align: left;
+  font-weight: 500;
+}

@@ -1,0 +1,17 @@
+.input {
+  width: 100%;
+  min-height: var(--tap);
+  background: var(--well);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  color: var(--text);
+  padding: 0 15px;
+}
+.link {
+  background: none;
+  border: none;
+  color: var(--review);
+  text-decoration: underline;
+  padding: 0;
+  font-size: inherit;
+}

@@ -1,0 +1,129 @@
+.mix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.mixItem b {
+  color: var(--text);
+  margin-right: 2px;
+}
+
+.item {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.itemHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.type {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--alert-wash);
+  color: var(--alert);
+}
+.type[data-type="misread"],
+.type[data-type="careless"] {
+  background: var(--passive-wash);
+  color: var(--passive);
+}
+.type[data-type="distractor"],
+.type[data-type="reasoning"] {
+  background: var(--review-wash);
+  color: var(--review);
+}
+.takeaway {
+  font-size: 0.94rem;
+  margin-bottom: 4px;
+}
+.meta {
+  margin: 4px 0 8px;
+}
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* form */
+.field,
+.fieldCol {
+  display: flex;
+  margin-bottom: 12px;
+}
+.field {
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.fieldCol {
+  flex-direction: column;
+  gap: 6px;
+}
+.field span,
+.fieldCol span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.field select,
+.fieldCol input,
+.fieldCol textarea {
+  background: var(--well);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  padding: 10px 12px;
+  min-height: var(--tap);
+  width: 100%;
+  font-family: var(--font-text);
+}
+.field select {
+  width: 170px;
+}
+.fieldCol textarea {
+  resize: vertical;
+}
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.typeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.typeBtn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  background: var(--glass-quiet);
+  color: var(--muted);
+  min-height: var(--tap);
+}
+.typeBtn b {
+  color: var(--text);
+  font-size: 0.85rem;
+}
+.typeBtn span {
+  font-size: 0.72rem;
+}
+.typeActive {
+  border-color: var(--alert);
+}
+.typeActive b {
+  color: var(--alert);
+}

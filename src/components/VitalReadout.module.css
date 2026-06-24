@@ -1,0 +1,39 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.label {
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+.value {
+  font-size: 5.2rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  display: flex;
+  align-items: baseline;
+  text-shadow: var(--readout-glow);
+}
+.unit {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-left: 4px;
+  opacity: 0.65;
+  letter-spacing: -0.02em;
+}
+.sub {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+@media (max-width: 360px) {
+  .value {
+    font-size: 4.3rem;
+  }
+}
