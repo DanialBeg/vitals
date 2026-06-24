@@ -63,6 +63,12 @@ export default function App() {
     );
   }
 
+  // Required-login gate: render ONLY the login screen, with no app mounted
+  // behind it (otherwise the dashboard flashes through the gate's fade-in).
+  if (showGate) {
+    return <AccountScreen open dismissable={false} onClose={() => {}} />;
+  }
+
   return (
     <div className={css.app}>
       <header className={css.statusbar}>
@@ -139,8 +145,8 @@ export default function App() {
       </nav>
 
       <AccountScreen
-        open={showGate || accountOpen}
-        dismissable={!!authUser}
+        open={accountOpen}
+        dismissable
         onClose={() => setAccountOpen(false)}
       />
     </div>
