@@ -4,6 +4,20 @@
   gap: var(--gap);
 }
 
+/* Desktop: modules flow into two columns; the lead module spans full width. */
+@media (min-width: 980px) {
+  .stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    align-items: start;
+    grid-auto-flow: row dense;
+  }
+  .stack > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -58,11 +72,8 @@
   background: color-mix(in srgb, currentColor 12%, transparent);
 }
 .heroWell {
-  margin-top: 16px;
-  background: var(--well);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-md);
-  padding: 8px 8px 4px;
+  margin-top: 14px;
+  padding: 4px 2px 0;
 }
 
 .quickGrid {

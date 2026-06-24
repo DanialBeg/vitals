@@ -64,17 +64,35 @@ export default function App() {
         </div>
       </header>
 
-      <div className={css.bannerWrap}>
-        <ReminderBanner />
+      {/* Desktop side nav (hidden on mobile). */}
+      <aside className={css.sidebar} aria-label="Primary">
+        {TABS.map(({ id, label, Icon }) => (
+          <button
+            key={id}
+            className={`${css.navItem} ${tab === id ? css.navItemActive : ""}`}
+            onClick={() => setTab(id)}
+            aria-current={tab === id ? "page" : undefined}
+          >
+            <Icon />
+            <span>{label}</span>
+          </button>
+        ))}
+      </aside>
+
+      <div className={css.mainCol}>
+        <div className={css.bannerWrap}>
+          <ReminderBanner />
+        </div>
+
+        <main className={css.content} key={tab}>
+          {tab === "today" && <Today onGoActivity={() => setTab("activity")} />}
+          {tab === "plan" && <Plan />}
+          {tab === "syllabus" && <Syllabus />}
+          {tab === "activity" && <Activity />}
+        </main>
       </div>
 
-      <main className={css.content} key={tab}>
-        {tab === "today" && <Today onGoActivity={() => setTab("activity")} />}
-        {tab === "plan" && <Plan />}
-        {tab === "syllabus" && <Syllabus />}
-        {tab === "activity" && <Activity />}
-      </main>
-
+      {/* Mobile bottom tab bar (hidden on desktop). */}
       <nav className={css.tabbar} aria-label="Primary">
         <div className={css.tabInner}>
           {TABS.map(({ id, label, Icon }) => (

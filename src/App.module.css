@@ -9,6 +9,19 @@
   overflow-x: clip;
 }
 
+/* main column wrapper (transparent passthrough on mobile) */
+.mainCol {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+/* desktop side nav — hidden on mobile */
+.sidebar {
+  display: none;
+}
+
 /* ---- Status bar (translucent glass nav) ---- */
 .statusbar {
   position: sticky;
@@ -172,4 +185,84 @@
   color: var(--on-accent);
   background: var(--accent);
   box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 36%, transparent);
+}
+
+/* ============================================================
+   Desktop: graceful widening — side nav + 2-column module grid.
+   ============================================================ */
+@media (min-width: 980px) {
+  .app {
+    display: grid;
+    max-width: 1180px;
+    grid-template-columns: 224px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "status status"
+      "nav    main";
+    column-gap: 18px;
+    padding: 0 22px 22px;
+  }
+
+  .statusbar {
+    grid-area: status;
+    margin: 0 -22px; /* bleed to the app edges */
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .sidebar {
+    grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: sticky;
+    top: calc(var(--statusbar-h) + 18px);
+    align-self: start;
+    height: max-content;
+    padding-top: 18px;
+  }
+  .navItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    border: none;
+    border-radius: var(--r-md);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    transition: background 0.16s ease, color 0.16s ease;
+  }
+  .navItem svg {
+    width: 20px;
+    height: 20px;
+    flex: none;
+  }
+  .navItem:hover {
+    background: var(--glass-quiet);
+    color: var(--text);
+  }
+  .navItemActive,
+  .navItemActive:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .mainCol {
+    grid-area: main;
+  }
+
+  /* roomier content; no floating tab bar to clear */
+  .content {
+    padding: 18px 0 32px;
+  }
+
+  .tabbar {
+    display: none;
+  }
 }

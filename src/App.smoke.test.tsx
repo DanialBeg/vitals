@@ -12,19 +12,21 @@ describe("App renders end-to-end (jsdom smoke)", () => {
     expect(screen.getByText(/Retrieval ratio/i)).toBeTruthy();
   });
 
+  // Both the desktop side-nav and the mobile tab bar render in the DOM (CSS
+  // hides one per viewport; jsdom applies no CSS), so each label matches twice.
+  const navClick = (label: string) =>
+    fireEvent.click(screen.getAllByRole("button", { name: new RegExp(`^${label}$`) })[0]);
+
   it("navigates to every tab without throwing", () => {
     render(<App />);
-    for (const label of ["Plan", "Syllabus", "Activity", "Today"]) {
-      fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${label}$`) }));
-    }
-    // Activity tab content present after the loop visited it
-    fireEvent.click(screen.getByRole("button", { name: /^Activity$/ }));
+    for (const label of ["Plan", "Syllabus", "Activity", "Today"]) navClick(label);
+    navClick("Activity");
     expect(screen.getByText(/Weekly recap/i)).toBeTruthy();
   });
 
   it("Syllabus shows the two coverage bars and expands a specialty", () => {
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: /^Syllabus$/ }));
+    navClick("Syllabus");
     expect(screen.getByText(/Blueprint coverage/i)).toBeTruthy();
     fireEvent.click(screen.getByText("General Medicine"));
     expect(screen.getByText("Sepsis & septic shock")).toBeTruthy();
