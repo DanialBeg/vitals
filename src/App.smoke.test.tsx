@@ -1,7 +1,10 @@
 // @vitest-environment jsdom
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import App from "./App";
+
+// Skip the first-run welcome screen so it doesn't overlay the app under test.
+vi.mock("./lib/onboarding", () => ({ isWelcomed: () => true, setWelcomed: () => {} }));
 
 afterEach(cleanup);
 

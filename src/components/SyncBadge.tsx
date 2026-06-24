@@ -3,7 +3,7 @@ import styles from "./SyncBadge.module.css";
 
 const LABEL: Record<string, { text: string; color: string }> = {
   disabled: { text: "Local", color: "var(--muted)" },
-  "signed-out": { text: "Local", color: "var(--muted)" },
+  "signed-out": { text: "Sign in", color: "var(--accent)" },
   offline: { text: "Offline", color: "var(--passive)" },
   syncing: { text: "Syncing", color: "var(--review)" },
   synced: { text: "Synced", color: "var(--retrieval)" },

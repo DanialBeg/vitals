@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 // End-to-end behaviour through the real UI: countdown, logging questions/cards,
 // the Anki trap, streak and retrieval ratio all update from real interactions.
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent, cleanup, within } from "@testing-library/react";
 import App from "./App";
 import { useStore } from "./state/store";
@@ -9,6 +9,9 @@ import { freshState } from "./state/defaults";
 import { daysToExam } from "./derive/phases";
 import { currentStreak } from "./derive/streak";
 import { todayISO } from "./lib/date";
+
+// Skip the first-run welcome screen so it doesn't overlay the app under test.
+vi.mock("./lib/onboarding", () => ({ isWelcomed: () => true, setWelcomed: () => {} }));
 
 beforeEach(() => useStore.getState().replaceState(freshState()));
 afterEach(cleanup);

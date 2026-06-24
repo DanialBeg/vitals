@@ -7,9 +7,12 @@ import { Activity } from "./screens/Activity";
 import { ReminderBanner } from "./components/ReminderBanner";
 import { SyncBadge } from "./components/SyncBadge";
 import { ThemeToggle } from "./components/ThemeToggle";
-import { AuthSheet } from "./components/AuthSheet";
+import { AccountScreen } from "./components/AccountScreen";
 import { IconToday, IconPlan, IconSyllabus, IconActivity } from "./components/icons";
 import { useStore } from "./state/store";
+import { useSync } from "./sync/engine";
+import { isSyncConfigured } from "./sync/supabase";
+import { isWelcomed, setWelcomed } from "./lib/onboarding";
 import { useNow } from "./lib/useNow";
 import { todayISO } from "./lib/date";
 import { daysToExam } from "./derive/phases";
@@ -33,7 +36,9 @@ function initialTab(): Tab {
 
 export default function App() {
   const [tab, setTab] = useState<Tab>(initialTab);
-  const [authOpen, setAuthOpen] = useState(false);
+  // Show the welcome/login screen on first run (only when sync is configured).
+  const [accountOpen, setAccountOpen] = useState(() => isSyncConfigured && !isWelcomed());
+  const authUser = useSync((st) => st.user);
   const now = useNow();
   const state = useStore();
   const today = todayISO(now);
@@ -60,7 +65,18 @@ export default function App() {
             <span className={css.miniLabel}>DWE</span>
           </div>
           <ThemeToggle />
-          <SyncBadge onClick={() => setAuthOpen(true)} />
+          {authUser ? (
+            <button
+              className={css.avatarBtn}
+              onClick={() => setAccountOpen(true)}
+              aria-label="Account"
+              title={authUser.email ?? "Account"}
+            >
+              {(authUser.email?.[0] ?? "?").toUpperCase()}
+            </button>
+          ) : (
+            <SyncBadge onClick={() => setAccountOpen(true)} />
+          )}
         </div>
       </header>
 
@@ -109,7 +125,11 @@ export default function App() {
         </div>
       </nav>
 
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AccountScreen
+        open={accountOpen}
+        onClose={() => setAccountOpen(false)}
+        onDismiss={setWelcomed}
+      />
     </div>
   );
 }
