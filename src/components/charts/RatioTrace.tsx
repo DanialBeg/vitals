@@ -1,16 +1,16 @@
-import { useMemo } from "react";
+import { useMemo, useId } from "react";
 import styles from "./RatioTrace.module.css";
 
 /**
- * Bedside-monitor trace for the retrieval ratio: a grid, the 60% target band,
- * the last-7-days ratio trace, and a faint sweeping highlight that reads as
- * "live". The sweep animation is killed by prefers-reduced-motion (global CSS).
+ * Clean area sparkline for the retrieval ratio: a smooth curve over the last 7
+ * days, a soft gradient fill, a subtle 60% target line, and the current-reading
+ * point. No grid, no animation — quiet and professional.
  */
 export function RatioTrace({
   trace,
   target = 0.6,
   inBand,
-  height = 96,
+  height = 92,
 }: {
   trace: number[];
   target?: number;
@@ -19,27 +19,38 @@ export function RatioTrace({
 }) {
   const w = 320;
   const h = height;
+  const pad = 6; // keep the stroke and end point off the edges
   const color = inBand ? "var(--retrieval)" : "var(--passive)";
+  const gid = useId();
 
-  const xs = (i: number) => (trace.length <= 1 ? w / 2 : (i / (trace.length - 1)) * w);
-  const ys = (v: number) => (1 - Math.max(0, Math.min(1, v))) * h;
+  const xs = (i: number) =>
+    trace.length <= 1 ? w / 2 : pad + (i / (trace.length - 1)) * (w - pad * 2);
+  const ys = (v: number) => pad + (1 - Math.max(0, Math.min(1, v))) * (h - pad * 2);
 
-  const path = useMemo(() => {
-    if (!trace.length) return "";
-    return trace.map((v, i) => `${i ? "L" : "M"}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(" ");
-  }, [trace, h]);
+  const pts = useMemo(() => trace.map((v, i) => [xs(i), ys(v)] as const), [trace, h]);
 
-  const area = useMemo(() => {
-    if (!trace.length) return "";
-    return `${path} L${w},${h} L0,${h} Z`;
-  }, [path, h]);
+  // Smooth Catmull-Rom → cubic Bézier for a refined, non-jagged line.
+  const line = useMemo(() => {
+    if (!pts.length) return "";
+    if (pts.length === 1) return `M${pts[0][0]},${pts[0][1]}`;
+    let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] ?? pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[i + 2] ?? p2;
+      const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+      const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+      const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    }
+    return d;
+  }, [pts]);
 
-  const lastX = xs(trace.length - 1);
-  const lastY = ys(trace[trace.length - 1] ?? 0);
-
-  const bandTop = (1 - (target + 0.1)) * h;
-  const bandH = 0.2 * h;
-  const targetY = (1 - target) * h;
+  const area = line ? `${line} L${w - pad},${h} L${pad},${h} Z` : "";
+  const last = pts[pts.length - 1];
+  const targetY = ys(target);
 
   return (
     <svg
@@ -48,53 +59,47 @@ export function RatioTrace({
       height={h}
       className={styles.trace}
       role="img"
-      aria-label="Retrieval ratio trace over the last 7 days"
+      aria-label="Retrieval ratio over the last 7 days"
       preserveAspectRatio="none"
     >
-      {/* monitor grid */}
-      {Array.from({ length: 7 }, (_, i) => (
-        <line
-          key={`v${i}`}
-          x1={(i / 6) * w}
-          x2={(i / 6) * w}
-          y1={0}
-          y2={h}
-          stroke="var(--line)"
-          strokeWidth="1"
-        />
-      ))}
-      {[0.25, 0.5, 0.75].map((g) => (
-        <line key={`h${g}`} x1={0} x2={w} y1={g * h} y2={g * h} stroke="var(--line)" strokeWidth="1" />
-      ))}
-
-      {/* 60% target band */}
-      <rect x={0} y={bandTop} width={w} height={bandH} fill="var(--retrieval)" opacity="0.07" />
-      <line x1={0} x2={w} y1={targetY} y2={targetY} stroke="var(--retrieval)" strokeWidth="1" strokeDasharray="3 5" opacity="0.5" />
-
-      {/* area fill under the trace */}
-      {area && <path d={area} fill={color} opacity="0.08" />}
-
-      {/* trace */}
-      {path && (
-        <path d={path} fill="none" stroke={color} strokeWidth="2.25" strokeLinejoin="round" strokeLinecap="round" />
-      )}
-
-      {/* current-reading blip */}
-      {path && (
-        <>
-          <circle cx={lastX} cy={lastY} r="5.5" fill={color} opacity="0.22" />
-          <circle cx={lastX} cy={lastY} r="2.6" fill={color} />
-        </>
-      )}
-
-      {/* faint live sweep */}
-      <rect className={styles.sweep} x={0} y={0} width={36} height={h} fill="url(#sweepGrad)" />
       <defs>
-        <linearGradient id="sweepGrad" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0%" stopColor={color} stopOpacity="0" />
-          <stop offset="100%" stopColor={color} stopOpacity="0.18" />
+        <linearGradient id={`fill-${gid}`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.26" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
+
+      {/* subtle 60% target line */}
+      <line
+        x1={pad}
+        x2={w - pad}
+        y1={targetY}
+        y2={targetY}
+        stroke="var(--muted)"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+        opacity="0.5"
+      />
+
+      {area && <path d={area} fill={`url(#fill-${gid})`} />}
+      {line && (
+        <path
+          d={line}
+          fill="none"
+          stroke={color}
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+      )}
+
+      {last && (
+        <>
+          <circle cx={last[0]} cy={last[1]} r="5" fill={color} opacity="0.18" />
+          <circle cx={last[0]} cy={last[1]} r="2.8" fill={color} />
+          <circle cx={last[0]} cy={last[1]} r="2.8" fill="none" stroke="var(--glass)" strokeWidth="1.4" />
+        </>
+      )}
     </svg>
   );
 }
