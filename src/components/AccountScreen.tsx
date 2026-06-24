@@ -25,12 +25,12 @@ const STATUS_COLOR: Record<string, string> = {
 export function AccountScreen({
   open,
   onClose,
-  onDismiss,
+  dismissable = true,
 }: {
   open: boolean;
   onClose: () => void;
-  /** Called when the user closes/skips — marks onboarding complete. */
-  onDismiss: () => void;
+  /** When false the screen is a required gate — no close affordance. */
+  dismissable?: boolean;
 }) {
   const { status, user, error, lastSyncedAt } = useSync();
   const [email, setEmail] = useState("");
@@ -40,10 +40,7 @@ export function AccountScreen({
 
   if (!open) return null;
 
-  const close = () => {
-    onDismiss();
-    onClose();
-  };
+  const close = () => onClose();
 
   const sendEmail = async () => {
     setBusy(true);
@@ -65,10 +62,14 @@ export function AccountScreen({
   return (
     <div className={s.overlay} role="dialog" aria-modal="true" aria-label="Account">
       <header className={s.bar}>
-        <button className={s.close} onClick={close} aria-label="Close">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-        </button>
-        <span className={s.barTitle}>Account</span>
+        {dismissable ? (
+          <button className={s.close} onClick={close} aria-label="Close">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        ) : (
+          <span className={s.spacer} />
+        )}
+        <span className={s.barTitle}>{user ? "Account" : "Sign in"}</span>
         <span className={s.spacer} />
       </header>
 
@@ -155,16 +156,12 @@ export function AccountScreen({
                 </Button>
               </>
             )}
-
-            <button className={s.skip} onClick={close}>
-              Continue without an account →
-            </button>
           </div>
         )}
 
         <p className={s.footer}>
-          Your data is always saved on this device. Signing in only adds cross-device sync —
-          it's never required to use Vitals.
+          Your progress is saved to your account and synced securely across every device you
+          sign in to.
         </p>
       </div>
     </div>

@@ -3,8 +3,8 @@ import { describe, it, expect, afterEach, vi } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import App from "./App";
 
-// Skip the first-run welcome screen so it doesn't overlay the app under test.
-vi.mock("./lib/onboarding", () => ({ isWelcomed: () => true, setWelcomed: () => {} }));
+// Run tests in local (unconfigured) mode so the app isn't behind the auth gate.
+vi.mock("./sync/supabase", () => ({ supabase: null, isSyncConfigured: false, TABLE: "vitals_state" }));
 
 afterEach(cleanup);
 

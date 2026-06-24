@@ -10,8 +10,8 @@ import { daysToExam } from "./derive/phases";
 import { currentStreak } from "./derive/streak";
 import { todayISO } from "./lib/date";
 
-// Skip the first-run welcome screen so it doesn't overlay the app under test.
-vi.mock("./lib/onboarding", () => ({ isWelcomed: () => true, setWelcomed: () => {} }));
+// Run tests in local (unconfigured) mode so the app isn't behind the auth gate.
+vi.mock("./sync/supabase", () => ({ supabase: null, isSyncConfigured: false, TABLE: "vitals_state" }));
 
 beforeEach(() => useStore.getState().replaceState(freshState()));
 afterEach(cleanup);

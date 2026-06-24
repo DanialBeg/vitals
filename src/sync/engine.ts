@@ -19,6 +19,7 @@ type SyncStore = {
   user: AuthUser | null;
   lastSyncedAt: string | null;
   error: string | null;
+  ready: boolean; // true once the initial auth session has been resolved
 };
 
 export const useSync = create<SyncStore>(() => ({
@@ -26,6 +27,7 @@ export const useSync = create<SyncStore>(() => ({
   user: null,
   lastSyncedAt: null,
   error: null,
+  ready: !isSyncConfigured, // nothing to resolve when sync is off
 }));
 
 const set = (patch: Partial<SyncStore>) => useSync.setState(patch);
@@ -121,7 +123,7 @@ export function initSync(): void {
   started = true;
 
   onAuthChange((user) => {
-    set({ user, status: user ? "syncing" : "signed-out" });
+    set({ user, status: user ? "syncing" : "signed-out", ready: true });
     if (user) void reconcile();
   });
 

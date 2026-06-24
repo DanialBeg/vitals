@@ -12,7 +12,6 @@ import { IconToday, IconPlan, IconSyllabus, IconActivity } from "./components/ic
 import { useStore } from "./state/store";
 import { useSync } from "./sync/engine";
 import { isSyncConfigured } from "./sync/supabase";
-import { isWelcomed, setWelcomed } from "./lib/onboarding";
 import { useNow } from "./lib/useNow";
 import { todayISO } from "./lib/date";
 import { daysToExam } from "./derive/phases";
@@ -36,19 +35,33 @@ function initialTab(): Tab {
 
 export default function App() {
   const [tab, setTab] = useState<Tab>(initialTab);
-  // Show the welcome/login screen on first run (only when sync is configured).
-  const [accountOpen, setAccountOpen] = useState(() => isSyncConfigured && !isWelcomed());
+  const [accountOpen, setAccountOpen] = useState(false);
   const authUser = useSync((st) => st.user);
+  const authReady = useSync((st) => st.ready);
   const now = useNow();
   const state = useStore();
   const today = todayISO(now);
   const days = daysToExam(state, today);
+
+  // Sign-in is required when sync is configured. Wait for the initial session
+  // so returning users don't flash the login screen.
+  const authLoading = isSyncConfigured && !authReady;
+  const showGate = isSyncConfigured && authReady && !authUser;
 
   // The live dot encodes the worst active condition by colour.
   const ret = retrievalReading(state, 7, today);
   const overdue = dueErrors(state, today).length;
   const dotColor =
     overdue > 0 ? "var(--alert)" : ret.ratio != null && !ret.inBand ? "var(--passive)" : "var(--accent)";
+
+  if (authLoading) {
+    return (
+      <div className={css.splash}>
+        <span className={css.splashDot} />
+        <span className={css.splashWord}>Vitals</span>
+      </div>
+    );
+  }
 
   return (
     <div className={css.app}>
@@ -126,9 +139,9 @@ export default function App() {
       </nav>
 
       <AccountScreen
-        open={accountOpen}
+        open={showGate || accountOpen}
+        dismissable={!!authUser}
         onClose={() => setAccountOpen(false)}
-        onDismiss={setWelcomed}
       />
     </div>
   );
