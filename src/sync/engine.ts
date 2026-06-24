@@ -122,7 +122,17 @@ export function initSync(): void {
   if (started || !isSyncConfigured) return;
   started = true;
 
+  // Backstop so the loading splash can never hang. The normal path is the
+  // onAuthChange event below — it fires within milliseconds on a clean load, so
+  // there's no flash and this timer is cleared. But an OAuth *return* with an
+  // unresolved code/error can stall that event; if so, force readiness after a
+  // short delay so the user reaches the gate to retry or use email.
+  const backstop = setTimeout(() => {
+    if (!useSync.getState().ready) set({ ready: true, status: "signed-out" });
+  }, 3000);
+
   onAuthChange((user) => {
+    clearTimeout(backstop);
     set({ user, status: user ? "syncing" : "signed-out", ready: true });
     if (user) void reconcile();
   });
