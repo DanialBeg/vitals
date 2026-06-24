@@ -1,0 +1,138 @@
+/* ============================================================================
+   Vitals design tokens — "Liquid Glass"
+   Two themes (light / dark) selected via [data-theme] on <html>. Surfaces are
+   translucent frosted glass floating over a colorful gradient mesh; numbers are
+   native SF tabular, controls are continuous-radius pills.
+   ========================================================================== */
+:root {
+  /* type — native Apple system stack (SF Pro on Apple devices) */
+  --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
+    system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-num: var(--font-text);
+  --font-mono: var(--font-text); /* legacy alias — everything is SF now */
+  --font-sans: var(--font-text); /* legacy alias */
+
+  /* geometry — continuous, generous radii */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+  --gap: 12px;
+
+  --tap: 44px;
+  --maxw: 480px;
+  --tabbar-h: 78px;
+  --statusbar-h: 50px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --blur: 26px;
+  --blur-strong: 34px;
+}
+
+/* ----------------------------- DARK ----------------------------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --text: #eef3f7;
+  --muted: rgba(196, 212, 222, 0.64);
+  --faint: rgba(196, 212, 222, 0.4);
+
+  /* colorful field behind the glass */
+  --bg-base: #06090f;
+  --bg-mesh:
+    radial-gradient(62% 48% at 14% -2%, rgba(18, 138, 118, 0.34), transparent 60%),
+    radial-gradient(54% 42% at 86% 8%, rgba(44, 96, 180, 0.26), transparent 62%),
+    radial-gradient(80% 60% at 50% 112%, rgba(22, 44, 78, 0.5), transparent 72%),
+    radial-gradient(40% 34% at 82% 84%, rgba(124, 64, 168, 0.16), transparent 62%);
+
+  /* glass materials */
+  --glass: rgba(28, 38, 47, 0.46);
+  --glass-strong: rgba(36, 48, 58, 0.62);
+  --glass-quiet: rgba(22, 30, 38, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-hi: rgba(255, 255, 255, 0.18); /* specular top edge */
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --well: rgba(0, 0, 0, 0.3);
+
+  /* vital channels (bright on dark) */
+  --retrieval: #3ee0a6;
+  --review: #38d2ee;
+  --passive: #f7b73e;
+  --alert: #ff6b7a;
+  --accent: #3ee0a6;
+
+  --retrieval-wash: rgba(62, 224, 166, 0.16);
+  --review-wash: rgba(56, 210, 238, 0.16);
+  --passive-wash: rgba(247, 183, 62, 0.16);
+  --alert-wash: rgba(255, 107, 122, 0.16);
+
+  --readout-glow: 0 0 32px color-mix(in srgb, currentColor 38%, transparent);
+  --on-accent: #042018;
+
+  /* legacy aliases so existing component CSS keeps resolving */
+  --bg: var(--bg-base);
+  --surface: var(--glass);
+  --surface-2: var(--glass-strong);
+  --module: var(--glass);
+  --module-2: var(--well);
+  --raise: var(--glass-strong);
+  --line: var(--hairline);
+  --hair: var(--hairline);
+  --hair-strong: var(--glass-border);
+  --shadow: var(--glass-shadow);
+}
+
+/* ----------------------------- LIGHT ----------------------------- */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --text: #0d1820;
+  --muted: rgba(36, 58, 72, 0.66);
+  --faint: rgba(36, 58, 72, 0.46);
+
+  --bg-base: #e7edf3;
+  --bg-mesh:
+    radial-gradient(60% 48% at 12% -2%, rgba(58, 208, 178, 0.4), transparent 60%),
+    radial-gradient(56% 44% at 88% 6%, rgba(116, 178, 255, 0.38), transparent 62%),
+    radial-gradient(82% 62% at 50% 114%, rgba(176, 196, 255, 0.36), transparent 72%),
+    radial-gradient(42% 36% at 84% 82%, rgba(255, 198, 168, 0.32), transparent 62%);
+
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.74);
+  --glass-quiet: rgba(255, 255, 255, 0.42);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-hi: rgba(255, 255, 255, 0.95);
+  --glass-shadow: 0 12px 34px rgba(28, 50, 74, 0.16);
+  --hairline: rgba(14, 32, 46, 0.1);
+  --well: rgba(14, 32, 46, 0.05);
+
+  /* vital channels (deeper for contrast on light glass) */
+  --retrieval: #00936a;
+  --review: #0a85a8;
+  --passive: #bb7e08;
+  --alert: #d22748;
+  --accent: #00936a;
+
+  --retrieval-wash: rgba(0, 147, 106, 0.12);
+  --review-wash: rgba(10, 133, 168, 0.12);
+  --passive-wash: rgba(187, 126, 8, 0.14);
+  --alert-wash: rgba(210, 39, 72, 0.12);
+
+  --readout-glow: none;
+  --on-accent: #ffffff;
+
+  --bg: var(--bg-base);
+  --surface: var(--glass);
+  --surface-2: var(--glass-strong);
+  --module: var(--glass);
+  --module-2: var(--well);
+  --raise: var(--glass-strong);
+  --line: var(--hairline);
+  --hair: var(--hairline);
+  --hair-strong: var(--glass-border);
+  --shadow: var(--glass-shadow);
+}
