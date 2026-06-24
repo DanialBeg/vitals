@@ -1,0 +1,25 @@
+.domainRow {
+  display: grid;
+  grid-template-columns: 1fr 90px 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+.domainRow:first-child {
+  border-top: none;
+}
+.domainName {
+  font-size: 0.9rem;
+}
+.domainBar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.domainPct {
+  text-align: right;
+  font-weight: 700;
+  font-size: 0.9rem;
+}

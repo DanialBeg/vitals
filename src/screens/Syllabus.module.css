@@ -1,0 +1,66 @@
+.spCard {
+  padding: 0;
+  overflow: hidden;
+}
+.spHead {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  text-align: left;
+  min-height: var(--tap);
+}
+.spName {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+.spRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+.chev {
+  color: var(--muted);
+  transition: transform 0.18s ease;
+  font-size: 0.8rem;
+}
+.conditions {
+  border-top: 1px solid var(--line);
+  padding: 4px 16px 10px;
+}
+.condRow {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  min-height: var(--tap);
+}
+.condRow:last-child {
+  border-bottom: none;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: none;
+}
+.condName {
+  flex: 1;
+  font-size: 0.92rem;
+}
+.condStatus {
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  flex: none;
+}
