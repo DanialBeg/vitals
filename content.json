@@ -1,0 +1,51 @@
+{
+  "_note": "Content layer for Vitals. Item counts are representative blueprint weightings used to drive coverage maths and focus selection, not official RACP figures. Condition names are clinical facts; the authoritative curriculum is the RACP Knowledge Guides (member login). Adapt freely.",
+  "exam": {
+    "stream": "Adult Medicine",
+    "name": "Divisional Written Exam (DWE)",
+    "date": "2027-02-09",
+    "sittingLabel": "Tuesday, 9 February 2027",
+    "applicationsOpen": "2026-11-23",
+    "applicationsClose": "2026-12-08",
+    "reserveDate": "2027-03-09",
+    "papers": [
+      { "name": "Clinical Applications", "questions": 100, "mcq": 92, "emq": 8, "durationMinutes": 190 },
+      { "name": "Medical Sciences", "questions": 70, "mcq": 66, "emq": 4 }
+    ],
+    "passMark": { "method": "Modified Angoff", "historicalRange": [55, 65], "referenceLine": 60 },
+    "context": "Twice-yearly sitting (Feb and Oct). Pass mark is set per sitting by the Modified Angoff method and has historically sat ~55-65%. Most successful candidates start ~12 months out with at least 6 months of concentrated study."
+  },
+  "specialties": [
+    { "id": "gen", "name": "General Medicine", "items": 12, "conditions": ["Sepsis & septic shock", "Undifferentiated fever", "Acute kidney injury", "Electrolyte emergencies", "Acid\u2013base disturbance", "Falls & syncope workup", "Delirium", "Anaphylaxis", "Acute breathlessness", "Chest pain assessment", "Shock & resuscitation", "Polypharmacy & deprescribing", "Frailty assessment", "Perioperative medicine"] },
+    { "id": "cardio", "name": "Cardiology", "items": 10, "conditions": ["Acute coronary syndromes", "Chronic coronary disease", "Heart failure (HFrEF/HFpEF)", "Atrial fibrillation & flutter", "Bradyarrhythmias & blocks", "Ventricular arrhythmias", "Valvular heart disease", "Infective endocarditis", "Pericardial disease", "Hypertension & emergencies", "Cardiomyopathies", "ECG interpretation", "Pulmonary hypertension", "Adult congenital heart disease"] },
+    { "id": "resp", "name": "Respiratory", "items": 10, "conditions": ["Asthma", "COPD & exacerbations", "Community-acquired pneumonia", "Pulmonary embolism", "Interstitial lung disease", "Bronchiectasis", "Pleural effusion", "Pneumothorax", "Obstructive sleep apnoea", "Lung cancer", "Sarcoidosis", "Respiratory failure & NIV", "Cystic fibrosis (adult)"] },
+    { "id": "gastro", "name": "Gastroenterology", "items": 10, "conditions": ["Upper GI bleeding", "Lower GI bleeding", "Inflammatory bowel disease", "Chronic liver disease & cirrhosis", "Acute liver failure", "Viral hepatitis", "Pancreatitis", "Coeliac disease", "Peptic ulcer disease", "Dysphagia & oesophageal disease", "Colorectal cancer", "Ascites & SBP", "Malabsorption", "IBS"] },
+    { "id": "endo", "name": "Endocrinology", "items": 10, "conditions": ["Type 1 & type 2 diabetes", "DKA & HHS", "Hypoglycaemia", "Thyrotoxicosis", "Hypothyroidism", "Adrenal insufficiency & crisis", "Cushing's syndrome", "Phaeochromocytoma", "Pituitary disorders", "Hypercalcaemia & hyperparathyroidism", "Osteoporosis & metabolic bone", "Hyponatraemia & SIADH", "Diabetes insipidus", "PCOS"] },
+    { "id": "nephro", "name": "Nephrology", "items": 9, "conditions": ["Acute kidney injury", "Chronic kidney disease", "Glomerulonephritis", "Nephrotic syndrome", "Diabetic nephropathy", "Renal replacement therapy", "Electrolyte & acid\u2013base disorders", "Renovascular disease", "Polycystic kidney disease", "Tubulointerstitial disease", "Kidney transplant medicine", "Contrast & drug nephrotoxicity"] },
+    { "id": "neuro", "name": "Neurology", "items": 9, "conditions": ["Ischaemic & haemorrhagic stroke", "TIA", "Seizures & epilepsy", "Status epilepticus", "Meningitis & encephalitis", "Headache & migraine", "Multiple sclerosis", "Parkinson's disease", "Guillain\u2013Barr\u00e9 syndrome", "Myasthenia gravis", "Spinal cord compression", "Peripheral neuropathy", "Dementia", "Raised intracranial pressure"] },
+    { "id": "haem", "name": "Haematology", "items": 9, "conditions": ["Anaemia (micro/macro/haemolytic)", "Iron studies interpretation", "Acute leukaemias", "Chronic leukaemias", "Lymphoma", "Myeloma & paraproteinaemias", "Myeloproliferative neoplasms", "VTE & anticoagulation", "Thrombocytopenia & ITP", "DIC", "Bleeding disorders", "Transfusion medicine & reactions", "Sickle cell & thalassaemia"] },
+    { "id": "onc", "name": "Oncology", "items": 9, "conditions": ["Oncological emergencies", "Tumour lysis syndrome", "Febrile neutropenia", "Malignant spinal cord compression", "SVC obstruction", "Hypercalcaemia of malignancy", "Lung cancer", "Breast cancer", "Colorectal cancer", "Cancer of unknown primary", "Immunotherapy toxicities", "Chemotherapy toxicities", "Paraneoplastic syndromes"] },
+    { "id": "rheum", "name": "Rheumatology", "items": 9, "conditions": ["Rheumatoid arthritis", "Spondyloarthropathies", "Crystal arthropathies (gout/CPPD)", "Systemic lupus erythematosus", "Vasculitides (ANCA & large vessel)", "Systemic sclerosis", "Septic arthritis", "Polymyalgia & giant cell arteritis", "Inflammatory myopathies", "Osteoarthritis", "Antiphospholipid syndrome", "Sj\u00f6gren's syndrome"] },
+    { "id": "id", "name": "Infectious Diseases", "items": 9, "conditions": ["Sepsis & source identification", "Antimicrobial stewardship", "Bacteraemia & endocarditis", "HIV & opportunistic infection", "Tuberculosis", "Hepatitis B & C", "Bone & joint infection", "Skin & soft tissue infection", "CNS infection", "Healthcare-associated infection", "Fever in the returned traveller", "Immunocompromised host infection", "COVID-19 & influenza"] },
+    { "id": "pharm", "name": "Pharmacology / Tox / Addiction", "items": 9, "conditions": ["Paracetamol overdose", "Salicylate & NSAID toxicity", "TCA & antidepressant overdose", "Opioid toxicity & reversal", "Alcohol withdrawal", "Benzodiazepine withdrawal", "Serotonin & neuroleptic malignant syndromes", "Drug interactions", "Therapeutic drug monitoring", "Adverse drug reactions", "Toxidromes & approach to poisoning", "Anticoagulant reversal", "Opioid use disorder"] },
+    { "id": "geri", "name": "Geriatric Medicine", "items": 5, "conditions": ["Delirium", "Dementia & behavioural change", "Falls & gait disorders", "Frailty & sarcopenia", "Continence", "Pressure injury", "Polypharmacy in older adults", "Advance care planning"] },
+    { "id": "immun", "name": "Immunology & Allergy", "items": 3, "conditions": ["Anaphylaxis", "Drug allergy & desensitisation", "Urticaria & angioedema", "Primary immunodeficiency", "Mast cell disorders", "Hypersensitivity reactions"] },
+    { "id": "derm", "name": "Dermatology", "items": 2, "conditions": ["Severe cutaneous drug reactions (SJS/TEN/DRESS)", "Cellulitis & erysipelas", "Cutaneous manifestations of systemic disease", "Melanoma & skin cancer", "Blistering disorders", "Erythroderma"] },
+    { "id": "obs", "name": "Medical Obstetrics", "items": 2, "conditions": ["Hypertension & pre-eclampsia in pregnancy", "VTE in pregnancy", "Diabetes in pregnancy", "Thyroid disease in pregnancy", "Prescribing in pregnancy & lactation", "Medical disorders & pregnancy outcomes"] },
+    { "id": "pall", "name": "Palliative Medicine", "items": 2, "conditions": ["Pain management & opioid rotation", "Nausea & vomiting", "Breathlessness at end of life", "Terminal secretions & care of the dying", "Goals of care discussions", "Symptom control in advanced disease"] },
+    { "id": "genet", "name": "Clinical Genetics", "items": 2, "conditions": ["Inherited cancer syndromes", "Connective tissue genetic disorders", "Pharmacogenomics", "Approach to the family history", "Common single-gene disorders in adults"] }
+  ],
+  "phases": [
+    { "id": "foundation", "name": "Foundation", "fraction": 0.40, "blurb": "Build coverage. Watch with intent, but pair every input block with questions on the same topic.", "checklist": ["First pass through high-yield specialties", "Set a daily question habit, however small", "Start the error log from question one", "Tick conditions as you genuinely cover them"] },
+    { "id": "consolidation", "name": "Consolidation", "fraction": 0.30, "blurb": "Shift weight to retrieval. Questions lead; lectures fill the gaps they expose.", "checklist": ["Questions become the headline daily activity", "Clear Anki reviews daily \u2014 no new cards without reviews", "Re-attempt logged errors when they fall due", "Close the weakest two specialties from coverage"] },
+    { "id": "practice", "name": "Practice & Mock", "fraction": 0.20, "blurb": "Exam conditions. Full timed sets, then dissect every miss.", "checklist": ["Timed question blocks under exam pressure", "Sit the RACP sample papers", "Review error-type mix \u2014 fix technique vs content", "Hit target accuracy across all high-yield domains"] },
+    { "id": "final", "name": "Final revision", "fraction": 0.10, "blurb": "Consolidate, don't cram. Re-attempt twice-missed items and trust the volume you've built.", "checklist": ["Re-attempt every twice-missed error", "Light, broad review \u2014 no new content", "Sleep, logistics, exam-day plan", "Taper volume into the sitting"] }
+  ],
+  "errorTypes": [
+    { "id": "knowledge", "label": "Knowledge gap", "hint": "Didn't know it" },
+    { "id": "misread", "label": "Misread stem", "hint": "Read it wrong" },
+    { "id": "distractor", "label": "Fell for distractor", "hint": "Tempting wrong answer" },
+    { "id": "reasoning", "label": "Faulty reasoning", "hint": "Knew the facts, wrong logic" },
+    { "id": "careless", "label": "Careless slip", "hint": "Should have got it" }
+  ]
+}
