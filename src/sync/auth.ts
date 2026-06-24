@@ -13,6 +13,16 @@ export async function sendMagicLink(email: string): Promise<{ error: string | nu
   return { error: error?.message ?? null };
 }
 
+/** Sign in with Google (full-page OAuth redirect; returns to the app). */
+export async function signInWithGoogle(): Promise<{ error: string | null }> {
+  if (!supabase) return { error: "Sync isn't configured on this build." };
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.origin },
+  });
+  return { error: error?.message ?? null };
+}
+
 export async function signOut(): Promise<void> {
   await supabase?.auth.signOut();
 }
