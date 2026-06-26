@@ -45,6 +45,19 @@ describe("mergeStates", () => {
     expect(mergeStates(local, remote).profile.dailyQuestionTarget).toBe(30);
   });
 
+  it("a cleared (epoch) local doc never clobbers the remote profile", () => {
+    // Mirrors engine.clearLocal(): adopting a user wipes local and stamps epoch,
+    // so the remote's saved profile must win the merge (not get reset to default).
+    const cleared = state(new Date(0).toISOString(), []); // empty, epoch-stamped
+    const remote = state("2026-06-23T09:00:00Z", [L("a")], {
+      profile: { ...freshState().profile, dailyQuestionTarget: 42, examDate: "2099-01-01" },
+    });
+    const merged = mergeStates(cleared, remote);
+    expect(merged.profile.dailyQuestionTarget).toBe(42);
+    expect(merged.profile.examDate).toBe("2099-01-01");
+    expect(merged.log.map((e) => e.id)).toContain("a"); // remote data preserved too
+  });
+
   it("merges syllabus keys from both sides", () => {
     const local = state("2026-06-23T10:00:00Z", [], { syllabus: { "cardio:0": "solid" } });
     const remote = state("2026-06-23T09:00:00Z", [], { syllabus: { "neuro:1": "learning" } });

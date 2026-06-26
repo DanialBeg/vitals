@@ -75,10 +75,15 @@ function writeOwner(userId: string | null) {
   }
 }
 
-/** Reset the persisted doc to an empty one (no push side effects). */
+/**
+ * Reset the persisted doc to an empty one (no push side effects). The doc is
+ * stamped with an epoch `updatedAt` so that when reconcile merges it against the
+ * adopted user's remote row, the remote always wins — otherwise a freshly-
+ * cleared (now-stamped) doc would clobber the user's saved profile with defaults.
+ */
 function clearLocal() {
   applyingRemote = true;
-  useStore.getState().replaceState(freshState());
+  useStore.getState().replaceState({ ...freshState(), updatedAt: new Date(0).toISOString() });
   applyingRemote = false;
   markPending(false);
 }
