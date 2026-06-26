@@ -8,7 +8,8 @@ import { ReminderBanner } from "./components/ReminderBanner";
 import { SyncBadge } from "./components/SyncBadge";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { AccountScreen } from "./components/AccountScreen";
-import { IconToday, IconPlan, IconSyllabus, IconActivity } from "./components/icons";
+import { SettingsScreen } from "./components/SettingsScreen";
+import { IconToday, IconPlan, IconSyllabus, IconActivity, IconSettings } from "./components/icons";
 import { useStore } from "./state/store";
 import { useSync } from "./sync/engine";
 import { isSyncConfigured } from "./sync/supabase";
@@ -36,6 +37,7 @@ function initialTab(): Tab {
 export default function App() {
   const [tab, setTab] = useState<Tab>(initialTab);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const authUser = useSync((st) => st.user);
   const authReady = useSync((st) => st.ready);
   const now = useNow();
@@ -83,6 +85,9 @@ export default function App() {
             <span className={css.miniUnit}>d</span>
             <span className={css.miniLabel}>DWE</span>
           </div>
+          <button className={css.iconBtn} onClick={() => setSettingsOpen(true)} aria-label="Settings">
+            <IconSettings />
+          </button>
           <ThemeToggle />
           {authUser ? (
             <button
@@ -149,6 +154,7 @@ export default function App() {
         dismissable
         onClose={() => setAccountOpen(false)}
       />
+      <SettingsScreen open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }
