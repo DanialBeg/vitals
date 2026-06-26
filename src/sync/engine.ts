@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { supabase, isSyncConfigured, TABLE } from "./supabase";
 import { onAuthChange, type AuthUser } from "./auth";
 import { useStore } from "../state/store";
+import { freshState } from "../state/defaults";
 import { migrate } from "../state/migrations";
 import { mergeStates } from "./merge";
 import { identifyUser, resetAnalytics } from "../lib/analytics";
@@ -34,6 +35,11 @@ export const useSync = create<SyncStore>(() => ({
 const set = (patch: Partial<SyncStore>) => useSync.setState(patch);
 
 const PENDING_KEY = "vitals.pendingPush";
+// The user id the locally-persisted doc belongs to. The store persists to a
+// single browser-global key, so without this marker one account's local doc
+// (or a dev `?seed` preview) would bleed into the next account signed in on the
+// same browser and get pushed up as theirs.
+const OWNER_KEY = "vitals.owner";
 let applyingRemote = false; // suppress push while we write a reconciled remote
 let pushTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -51,6 +57,42 @@ function hasPending(): boolean {
   } catch {
     return false;
   }
+}
+
+function readOwner(): string | null {
+  try {
+    return localStorage.getItem(OWNER_KEY);
+  } catch {
+    return null;
+  }
+}
+function writeOwner(userId: string | null) {
+  try {
+    if (userId) localStorage.setItem(OWNER_KEY, userId);
+    else localStorage.removeItem(OWNER_KEY);
+  } catch {
+    /* storage may be unavailable */
+  }
+}
+
+/** Reset the persisted doc to an empty one (no push side effects). */
+function clearLocal() {
+  applyingRemote = true;
+  useStore.getState().replaceState(freshState());
+  applyingRemote = false;
+  markPending(false);
+}
+
+/**
+ * Make `userId` the owner of the local doc. If the doc currently belongs to a
+ * different user (or to nobody — e.g. a `?seed` preview, where the marker was
+ * never set), drop it so we don't inherit their data. A same-user reload keeps
+ * the local doc intact, preserving any unsynced offline edits.
+ */
+function adoptOwner(userId: string) {
+  if (readOwner() === userId) return;
+  clearLocal();
+  writeOwner(userId);
 }
 
 async function pushNow(): Promise<void> {
@@ -80,6 +122,11 @@ async function reconcile(): Promise<void> {
   const { user } = useSync.getState();
   if (!supabase || !user) return;
   set({ status: "syncing", error: null });
+
+  // Never let a prior user's (or a seeded preview's) local doc be attributed to
+  // this account. On a different/first owner this resets local to empty before
+  // we pull, so we only ever adopt this user's own remote data.
+  adoptOwner(user.id);
 
   const { data: row, error } = await supabase
     .from(TABLE)
@@ -141,7 +188,11 @@ export function initSync(): void {
       identified = true;
       void reconcile();
     } else if (identified) {
-      resetAnalytics(); // sign-out: stop attributing events to the prior user
+      // Real sign-out: drop the prior user's local doc so it can't bleed into
+      // the next account signed in on this browser, and stop attributing events.
+      clearLocal();
+      writeOwner(null);
+      resetAnalytics();
       identified = false;
     }
   });
