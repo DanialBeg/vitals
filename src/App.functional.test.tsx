@@ -79,4 +79,14 @@ describe("Vitals is functional end-to-end", () => {
     fireEvent.click(screen.getByText("Sepsis & septic shock")); // none -> learning
     expect(useStore.getState().syllabus["gen:0"]).toBe("learning");
   });
+
+  it("settings edits the synced profile (daily question goal)", () => {
+    render(<App />);
+    expect(useStore.getState().profile.dailyQuestionTarget).toBe(20); // default
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    const dialog = screen.getByRole("dialog", { name: "Settings" });
+    expect(within(dialog).getByText("Exam date")).toBeTruthy();
+    fireEvent.change(within(dialog).getByLabelText("Daily question goal"), { target: { value: "35" } });
+    expect(useStore.getState().profile.dailyQuestionTarget).toBe(35);
+  });
 });
