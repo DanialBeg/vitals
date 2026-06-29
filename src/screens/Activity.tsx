@@ -4,10 +4,12 @@ import { Card, Button, EmptyState } from "../components/ui";
 import { TrendChart } from "../components/charts/TrendChart";
 import { ErrorLog } from "../components/ErrorLog";
 import { WeeklyRecap } from "../components/WeeklyRecap";
+import { SpecialtyDetail } from "../components/SpecialtyDetail";
 import { useStore } from "../state/store";
 import { exam } from "../content";
 import { exportState, parseImport } from "../lib/exportImport";
 import { rollingAccuracy, overallAccuracy, accuracyTrend, accuracyByDomain, totalQuestions } from "../derive/accuracy";
+import { loggedSpecialties } from "../derive/specialty";
 import { studyMinutes } from "../derive/hours";
 import { pctLabel, hours } from "../lib/format";
 import s from "./screens.module.css";
@@ -20,11 +22,20 @@ export function Activity() {
   const snapshot = useStore((st) => st.snapshot);
   const fileRef = useRef<HTMLInputElement>(null);
   const [importMsg, setImportMsg] = useState<string | null>(null);
+  const [openSpecialty, setOpenSpecialty] = useState<string | null>(
+    () => (import.meta.env.DEV ? new URLSearchParams(location.search).get("specialty") : null),
+  );
+
+  const openRecord = (id: string) => {
+    setOpenSpecialty(id);
+    posthog?.capture("specialty_record_opened", { specialty_id: id });
+  };
 
   const rolling = rollingAccuracy(state);
   const overall = overallAccuracy(state);
   const trend = accuracyTrend(state, 30);
   const byDomain = accuracyByDomain(state);
+  const bySpecialty = loggedSpecialties(state);
   const mins = studyMinutes(state);
   const totalQ = totalQuestions(state);
   const ref = exam.passMark.referenceLine / 100;
@@ -70,7 +81,7 @@ export function Activity() {
           <EmptyState>Tag questions with a topic to see weak areas surface here.</EmptyState>
         ) : (
           byDomain.map((d) => (
-            <div key={d.specialtyId} className={a.domainRow}>
+            <button key={d.specialtyId} className={a.domainRow} onClick={() => openRecord(d.specialtyId)}>
               <div className={a.domainName}>
                 {d.name}
                 {d.provisional && <span className={s.smallprint}> · low N</span>}
@@ -85,8 +96,33 @@ export function Activity() {
                 />
               </div>
               <div className={`mono ${a.domainPct}`}>{pctLabel(d.acc)}</div>
-            </div>
+              <span className={a.chev}>›</span>
+            </button>
           ))
+        )}
+      </Card>
+
+      {/* Activity by specialty (full record, incl. non-question activity) */}
+      <Card title="By specialty">
+        {bySpecialty.length === 0 ? (
+          <EmptyState>
+            Tag your sessions with a topic (in the quick-log) to build a per-specialty record.
+          </EmptyState>
+        ) : (
+          <>
+            <p className={s.note} style={{ marginBottom: 8 }}>Tap a specialty to see its full record.</p>
+            {bySpecialty.map((sp) => (
+              <button key={sp.id} className={a.specRow} onClick={() => openRecord(sp.id)}>
+                <span className={a.specName}>{sp.name}</span>
+                <span className={a.specMeta}>
+                  {sp.questions > 0 && <span className="mono">{sp.questions} Q</span>}
+                  {sp.acc != null && <span className="mono" style={{ color: sp.acc >= ref ? "var(--retrieval)" : "var(--passive)" }}> · {pctLabel(sp.acc)}</span>}
+                  {sp.questions === 0 && <span className={s.smallprint}>{sp.lectures + sp.cards + sp.reviews} sessions</span>}
+                </span>
+                <span className={a.chev}>›</span>
+              </button>
+            ))}
+          </>
         )}
       </Card>
 
@@ -129,6 +165,8 @@ export function Activity() {
         />
         {importMsg && <p className={s.note} style={{ marginTop: 10 }}>{importMsg}</p>}
       </Card>
+
+      <SpecialtyDetail specialtyId={openSpecialty} onClose={() => setOpenSpecialty(null)} />
     </div>
   );
 }
