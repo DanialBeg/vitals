@@ -1,13 +1,24 @@
 .domainRow {
   display: grid;
-  grid-template-columns: 1fr 90px 44px;
+  grid-template-columns: 1fr 80px 40px 12px;
   align-items: center;
   gap: 10px;
-  padding: 9px 0;
-  border-top: 1px solid var(--line);
+  padding: 10px 0;
+  border-top: 1px solid var(--hairline);
+  width: 100%;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
 }
 .domainRow:first-child {
   border-top: none;
+}
+.domainRow:active {
+  opacity: 0.65;
 }
 .domainName {
   font-size: 0.9rem;
@@ -15,11 +26,48 @@
 .domainBar {
   height: 8px;
   border-radius: 999px;
-  background: var(--line);
+  background: var(--well);
+  border: 1px solid var(--hairline);
   overflow: hidden;
 }
 .domainPct {
   text-align: right;
   font-weight: 700;
   font-size: 0.9rem;
+}
+.chev {
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  text-align: center;
+}
+
+/* By specialty list */
+.specRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 0;
+  border-top: 1px solid var(--hairline);
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  text-align: left;
+  cursor: pointer;
+  min-height: var(--tap);
+  color: var(--text);
+}
+.specRow:active {
+  opacity: 0.65;
+}
+.specName {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.specMeta {
+  font-size: 0.85rem;
+  color: var(--muted);
 }

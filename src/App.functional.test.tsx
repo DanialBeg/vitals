@@ -2,7 +2,7 @@
 // End-to-end behaviour through the real UI: countdown, logging questions/cards,
 // the Anki trap, streak and retrieval ratio all update from real interactions.
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, within } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, within, act } from "@testing-library/react";
 import App from "./App";
 import { useStore } from "./state/store";
 import { freshState } from "./state/defaults";
@@ -78,6 +78,19 @@ describe("Vitals is functional end-to-end", () => {
     expect(Object.keys(before)).toHaveLength(0);
     fireEvent.click(screen.getByText("Sepsis & septic shock")); // none -> learning
     expect(useStore.getState().syllabus["gen:0"]).toBe("learning");
+  });
+
+  it("per-specialty record: a tagged session shows up and opens a detail", () => {
+    render(<App />);
+    act(() => {
+      useStore.getState().addLog({ date: todayISO(), type: "questions", count: 10, correct: 7, specialtyId: "cardio" });
+    });
+    fireEvent.click(screen.getAllByRole("button", { name: /^Activity$/ })[0]);
+    // Cardiology appears in the by-specialty list; tap it to open the record.
+    const rows = screen.getAllByRole("button", { name: /Cardiology/ });
+    fireEvent.click(rows[0]);
+    expect(screen.getByText("Recent sessions")).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Log for Cardiology/ })).toBeTruthy();
   });
 
   it("settings edits the synced profile (daily question goal)", () => {

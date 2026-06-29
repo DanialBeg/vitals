@@ -20,10 +20,12 @@ export function QuickLog({
   open,
   onClose,
   initialType,
+  initialSpecialtyId,
 }: {
   open: boolean;
   onClose: () => void;
   initialType?: LogType;
+  initialSpecialtyId?: string;
 }) {
   const posthog = usePostHog();
   const addLog = useStore((s) => s.addLog);
@@ -47,9 +49,9 @@ export function QuickLog({
     setCount(defaultCount(t));
     setCorrect("");
     setMinutes("");
-    setSpecialtyId("");
+    setSpecialtyId(initialSpecialtyId ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, initialType]);
+  }, [open, initialType, initialSpecialtyId]);
 
   const pickType = (t: LogType) => {
     setType(t);
